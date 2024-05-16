@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.ubaya.todoapp.model.Todo
 import com.ubaya.todoapp.model.TodoDatabase
+import com.ubaya.todoapp.util.buildDb
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -23,9 +24,8 @@ class ListTodoViewModel(application: Application) : AndroidViewModel(application
         loadingLD.value = true
         todoLoadErrorLD.value = false
         launch {
-            val db = TodoDatabase.buildDatabase(
-                getApplication()
-            )
+            val db = buildDb(getApplication())
+
 
             todoLD.postValue(db.todoDao().selectAllTodo())
             loadingLD.postValue(false)
@@ -37,7 +37,7 @@ class ListTodoViewModel(application: Application) : AndroidViewModel(application
             val db = TodoDatabase.buildDatabase(
                 getApplication()
             )
-            db.todoDao().deleteTodo(todo)
+            db.todoDao().updateDone(todo.uuid)
 
             todoLD.postValue(db.todoDao().selectAllTodo())
         }
